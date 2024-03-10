@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Win32;
 
 
 namespace Grafika_IT2
@@ -53,7 +54,7 @@ namespace Grafika_IT2
 
             saveFileDialog.Filter = "Soubory CSV (*.csv)|*.csv|Všechny soubory (*.*)|*.*";
 
-            if (saveFileDialog.ShowDialog() != DialogResult.OK)
+            if (saveFileDialog.ShowDialog() == true)
             {
                 string cestaKSouboru = saveFileDialog.FileName;
                 System.Diagnostics.Process.Start("explorer.exe", "/select, " + cestaKSouboru);
