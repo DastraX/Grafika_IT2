@@ -14,7 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Microsoft.Win32;
+using System.IO.Enumeration;
 
 
 namespace Grafika_IT2
@@ -40,36 +40,46 @@ namespace Grafika_IT2
 
     private void ButtonOpen_Click(object sender, RoutedEventArgs e)
     {
-      var text = File.ReadAllText("data.csv");
-      board.FromString(text);
-      board.Draw(canvasBoard);
-    }
-
-    private void ButtonSave_Click(object sender, RoutedEventArgs e)
-    {
-      SaveFileDialog saveFileDialog = new SaveFileDialog();
-
-            saveFileDialog.FileName = "data.csv";
-            saveFileDialog.DefaultExt = "csv";
-
-            saveFileDialog.Filter = "Soubory CSV (*.csv)|*.csv|Všechny soubory (*.*)|*.*";
-
-            if (saveFileDialog.ShowDialog() == true)
+            try
             {
-                string cestaKSouboru = saveFileDialog.FileName;
-                System.Diagnostics.Process.Start("explorer.exe", "/select, " + cestaKSouboru);
+                var openFileDialog = new OpenFileDialog();
+                openFileDialog.Filter = "CSV Files (*.csv)|*.csv|All files (*.*)|*.*";
+
+                if (openFileDialog.ShowDialog() == true)
+                {
+                    var text = File.ReadAllText(openFileDialog.FileName);
+                    board.FromString(text);
+                    board.Draw(canvasBoard);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Soubor nebyl otevřen:\r\n" + ex.Message);
             }
 
 
-      try
-      {
-        File.WriteAllText("data.csv", board.ToString());
-        MessageBox.Show("Soubor byl uložen");
-      }
-      catch (Exception ex)
-      {
-        MessageBox.Show("Soubor nebyl uložen z důvodu chyby:\r\n" + ex.Message);
-      }     
+            //var text = File.ReadAllText("data.csv");
+            //board.FromString(cestaKSouboru);
+            //board.Draw(canvasBoard);
+        }
+
+    private void ButtonSave_Click(object sender, RoutedEventArgs e)
+    {
+            try
+            {
+                var saveFileDialog = new SaveFileDialog();
+                saveFileDialog.Filter = "CSV Files (*.csv)|*.csv|All files (*.*)|*.*";
+
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    File.WriteAllText(saveFileDialog.FileName, board.ToString());
+                    MessageBox.Show("Soubor byl uložen.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Soubor nebyl uložen z důvodu chyby:\r\n" + ex.Message);
+            }
     }
 
     private void ButtonClear_Click(object sender, RoutedEventArgs e)
